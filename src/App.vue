@@ -32,7 +32,7 @@ import firebaseui from 'firebaseui';
 export default class App extends Vue {
   getCurrentColorScheme() {
     return this.getColorSchemeFromId(this.$store.state.settings.colorTheme);
-  }
+  } 
 
   getColorSchemeFromId(themeId: string) {
     return Themes.filter((t) => t.id === themeId)[0] || Themes[0];
