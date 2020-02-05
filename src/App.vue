@@ -1,27 +1,41 @@
 <template>
-  <div id='app-container'>
-    <div id='theme-container' :style='getCSSColorScheme()' :class='{ toggleOff: !this.$store.state.settings.enableThemeAnimations }'> </div>
-    <div id='wrap' width='100vw' height='100vh' >
-      <canvas id='output' width='2000px' height='2000px'></canvas>
-    </div>
-    <div id='app'>
-      <div id='nav'>
-        <router-link to='/home'>Now</router-link>
-        <!-- <router-link to='/today'>Today</router-link> -->
-        <router-link to='/about'>About</router-link>
+	<div id="page warpper">	
+  <div id="app-container" :style="getCSSColorScheme()" :class="{ toggleOff: !this.$store.state.settings.enableThemeAnimations }">
+	  
+    <div id="app">
+      <div id="nav">
+        <router-link to="/home">Now</router-link>
+        <!-- <router-link to="/today">Today</router-link> -->
+        <router-link to="/about">About</router-link>
       </div>
       <keep-alive>
         <router-view/>
       </keep-alive>
     </div>
-    <div id='sources'>  
-      <img id='base' crossorigin='anonymous' width= '2000' height= '2000' src='https://cdn.glitch.com/0f517177-828e-4f09-bd56-7413c9736e48%2FXtra.png?v=1576216285048' />
-      <img id='xtra' crossorigin='anonymous' width= '2000' height= '2000' src='https://cdn.glitch.com/0f517177-828e-4f09-bd56-7413c9736e48%2Fxtra2.png?v=1576272681891' />
-    </div>
   </div>
+  <div class="canvas" id="wrap" ref="wrap" width="100vw" height="100vh" >
+    	<canvas id="output" ref="output" width="2000px" height="2000px"> 
+    <div id="app">
+      <div id="nav">
+        <router-link to="/home">Now</router-link>
+        <!-- <router-link to="/today">Today</router-link> -->
+        <router-link to="/about">About</router-link>
+      </div>
+      <keep-alive>
+        <router-view/>
+      </keep-alive>
+    </div>
+</canvas>
+	  </div>
+	  
+      <div id="sources">
+  		  <img id="base" ref="base" crossorigin="anonymous" width= "2000" height= "2000" src="https://cdn.glitch.com/0f517177-828e-4f09-bd56-7413c9736e48%2FXtra.png?v=1576216285048" />
+   		 <img id="xtra" ref="xtra" crossorigin="anonymous" width= "2000" height= "2000" src="https://cdn.glitch.com/0f517177-828e-4f09-bd56-7413c9736e48%2Fxtra2.png?v=1576272681891" />
+		</div>
+ 	 </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { Themes } from './themes';
 import { DateTime } from 'luxon';
@@ -40,9 +54,9 @@ export default class App extends Vue {
 
   getCSSColorScheme() {
     let themeGradient;
-    var currentColorScheme = this.getCurrentColorScheme();
+    const currentColorScheme = this.getCurrentColorScheme();
     if (this.$store.state.settings.colorTheme === 'theme15') {
-      var currentDate = DateTime.local().setZone('America/Los_Angeles');
+      const currentDate = DateTime.local().setZone('America/Los_Angeles');
       if (currentDate.hour >= 21 && currentDate.hour <= 4) {
         themeGradient = this.getColorSchemeFromId('theme12');
       } else if (currentDate.hour <= 9) {
@@ -51,21 +65,19 @@ export default class App extends Vue {
         themeGradient = this.getColorSchemeFromId('theme4');
       } else if (currentDate.hour <= 15) {
         themeGradient = this.getColorSchemeFromId('theme6');
-        console.log('Theme 6');
       } else if (currentDate.hour <= 17) {
         themeGradient = this.getColorSchemeFromId('theme7');
       } else {
         themeGradient = this.getColorSchemeFromId('theme1');
       }
     }
-    else if (this.$store.state.settings.colorTheme === 'theme17') {
-        document.getElementById('wrap').style.display = 'inline';
-        console.log('Theme 17');
-    }
     else {
       themeGradient = currentColorScheme;
-      // document.getElementById('wrap').style.display = 'none';
     }
+    if (this.$store.state.settings.colorTheme === 'theme17') {
+		const asdfghjkl: HTMLElement | any = document.getElementById("wrap");
+		asdfghjkl.style.display = "block";
+	}
     return {
       '--gradient-colors': themeGradient.gradientColors.join(', '),
       '--button-menu-color': themeGradient.btnMenuColor,
@@ -73,31 +85,18 @@ export default class App extends Vue {
       '--button-hover-color': themeGradient.btnHoverColor,
       '--gradient-count': themeGradient.gradientColors.length,
     };
-  }
-}
-
-  // Your web app's Firebase configuration
-let firebaseConfig = {
-    apiKey: 'AIzaSyDWaQp0SxDc4t_aaUIxdDI_Zb0rf8YWASc',
-    authDomain: 'helloyeet-c3c84.firebaseapp.com',
-    databaseURL: 'https://helloyeet-c3c84.firebaseio.com',
-    projectId: 'helloyeet-c3c84',
-    storageBucket: 'helloyeet-c3c84.appspot.com',
-    messagingSenderId: '969131500601',
-    appId: '1:969131500601:web:f47d01d3ff7c4eef',
-  };
-  // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-
-// -----------------------------------------------BUbbles
+  
+  //Start Bubbles
 var imgWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 var imgHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-// This is dead simple, just heavily-commented!
 
-// Some varants to tweak.
-var NUM_CIRCLES = 80;
-var MIN_SIZE = 50;
-var MAX_SIZE = 200;
+
+/** This is dead simple, just heavily-commented! **/
+
+// Some constants to tweak.
+var NUM_CIRCLES = 80,
+    MIN_SIZE = 50,
+    MAX_SIZE = 200;
 
 // Returns a random int between two numbers.
 function getRndInt(min, max) {
@@ -107,14 +106,14 @@ function getRndInt(min, max) {
 }
 
 // Cache refs to our canvas, context and images.
-var c = document.getElementById('output');
-var ctx = c.getContext('2d');
-var sources = document.getElementById('sources');
-var imgBase = document.getElementById('base');
-var imgXtra = document.getElementById('xtra');
+var c = this.$refs["output"],
+    ctx = c.$refs["2d"],
+    sources = this.$refs["sources"],
+    imgBase = this.$refs["base"],
+    imgXtra = this.$refs["xtra"],
 
 // Timestamp var used in the update-render loop.
-let t = 0x0;
+var t;
 
 /**
  * An object 'class' to describe a circle which animates
@@ -223,7 +222,7 @@ function render() {
     ctx.closePath();
     ctx.clip();
 
-    // Draw the 'I Am The Night' image, which will be clipped
+    // Draw the 'Bubbles' image, which will be clipped
     // by our path, so it is drawn 'into' the circles.
     ctx.drawImage(imgXtra, 0, 0, imgWidth, imgHeight);
 
@@ -242,14 +241,34 @@ function loop() {
 
 // Kick it off when our images are fully loaded.
 imagesLoaded(sources, function() {
-    console.log('Images Loaded');
+    console.log("Humans are such easy prey...");
     loop();
 });
+//end Bubbles
+}
+}
+
+  // Your web app's Firebase configuration
+let firebaseConfig = {
+    apiKey: 'AIzaSyDWaQp0SxDc4t_aaUIxdDI_Zb0rf8YWASc',
+    authDomain: 'helloyeet-c3c84.firebaseapp.com',
+    databaseURL: 'https://helloyeet-c3c84.firebaseio.com',
+    projectId: 'helloyeet-c3c84',
+    storageBucket: 'helloyeet-c3c84.appspot.com',
+    messagingSenderId: '969131500601',
+    appId: '1:969131500601:web:f47d01d3ff7c4eef',
+  };
+  // Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+
+
+
 
 </script>
 
 
-<style lang='scss'>
+<style lang="scss">
 
 @keyframes AnimatedTheme {
   0% { background-position: 50% 0%; }
@@ -257,27 +276,18 @@ imagesLoaded(sources, function() {
   100% { background-position: 50% 0%; }
 }
 
-html, body, #app-container, #theme-container {
+
+html, body, #app-container {
   height: auto;
   min-height: 100vh;
   width: 100%;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  overflow-x: hidden;
-  overflow-y: scroll;
 }
 
-#theme-container {
-  z-index: -10;
-  position:fixed;
-  top: 0px;
-  left: 0px;
-  bottom: auto;
-  right: auto;
-  overflow: hidden;
-
-  background: linear-gradient(to bottom, var(--gradient-colors, '#42b983, #2f9768'));
+#app-container {
+  background: linear-gradient(to bottom, var(--gradient-colors, "#42b983, #2f9768"));
   background-size: 400% 400%;
   animation: AnimatedTheme 20s ease infinite;
 
@@ -286,22 +296,6 @@ html, body, #app-container, #theme-container {
     animation: none;
   }
 }
-
-#wrap {
-  z-index: -8;
-  position:fixed;
-  top: 0px;
-  left: 0px;
-  bottom: auto;
-  right: auto;
-  overflow: hidden;
-  display: none;
-}
-
-#sources {
-	display: none;
-}
-
 #app {
   font-family: 'Niramit', Avenir, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -371,5 +365,22 @@ html, body, #app-container, #theme-container {
     background-color: var(--button-submenu-color, #2f9768);
     box-shadow: 0 0 8px 4px rgba(100, 100, 100, .1);
   }
+}
+
+.canvas {
+  position:absolute;
+  top: 0px;
+  left: 0px;
+  bottom: auto;
+  right: auto;
+  display: none;
+}
+
+#sources {
+    display: none;
+}
+.image-2 { 
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(18%, #999), color-stop(41%, #000), color-stop(61%, #fff), color-stop(82%, #757575)); 
+  background-image: linear-gradient(180deg, #999 18%, #000 41%, #fff 61%, #757575 82%); 
 }
 </style>
